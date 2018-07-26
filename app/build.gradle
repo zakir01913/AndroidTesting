@@ -1,0 +1,67 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.zakir.androidtesting"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation deps.constraint_layout
+    // Support libraries
+    implementation deps.support.app_compat
+    implementation deps.support.v4
+    implementation deps.support.design
+
+    // Architecture components
+    implementation deps.lifecycle.runtime
+    implementation deps.lifecycle.extensions
+    annotationProcessor deps.lifecycle.compiler
+    implementation deps.room.runtime
+    annotationProcessor deps.room.compiler
+    implementation deps.room.rxjava2
+
+    // dagger
+    implementation deps.dagger.runtime
+    annotationProcessor deps.dagger.compiler
+
+    // RxJava
+    implementation deps.rx_android
+    implementation deps.rxjava2
+
+    // Dependencies for local unit tests
+    testImplementation deps.junit
+    testImplementation deps.hamcrest
+    testImplementation deps.mockito.all
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+
+    // Espresso UI Testing
+    androidTestImplementation deps.espresso.core
+    androidTestImplementation deps.espresso.contrib
+    androidTestImplementation deps.espresso.intents
+
+    // Resolve conflicts between main and test APK:
+    androidTestCompile deps.support.annotations
+    androidTestCompile deps.support.v4
+    androidTestCompile deps.support.app_compat
+    androidTestCompile deps.support.design
+}
