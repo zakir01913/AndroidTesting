@@ -49,9 +49,24 @@ dependencies {
     // Dependencies for local unit tests
     testImplementation deps.junit
     testImplementation deps.hamcrest
-    testImplementation deps.mockito.all
+    testImplementation deps.arch_core.testing
+    testImplementation deps.mockito.core
 
-    testImplementation 'junit:junit:4.12'
+    // Resolve conflicts between main and local unit tests
+    testCompile deps.support.annotations
+    testCompile deps.support.core_utils
+
+    // Android Testing Support Library's runner and rules
+    androidTestCompile deps.atsl.runner
+    androidTestCompile deps.atsl.rules
+    androidTestCompile deps.room.testing
+    androidTestCompile deps.arch_core.testing
+
+    // Dependencies for Android unit tests
+    androidTestCompile deps.junit
+    androidTestCompile deps.mockito.core, { exclude group: 'net.bytebuddy' }
+    androidTestCompile deps.dexmaker
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
 
     // Espresso UI Testing
