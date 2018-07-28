@@ -46,6 +46,9 @@ dependencies {
     implementation deps.rx_android
     implementation deps.rxjava2
 
+    //
+    compile 'commons-validator:commons-validator:1.6'
+
     // Dependencies for local unit tests
     testImplementation deps.junit
     testImplementation deps.hamcrest

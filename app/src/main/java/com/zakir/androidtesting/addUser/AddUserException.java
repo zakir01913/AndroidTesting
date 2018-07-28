@@ -9,7 +9,7 @@ public class AddUserException extends Throwable{
 
     public enum ErrorCode {
         NONE,
-        EMPTY_FIRST_NAME
+        EMPTY_LAST_NAME, INVALID_EMAIL, EMPTY_FIRST_NAME
     }
 
     public AddUserException(String message, ErrorCode errorCode) {
