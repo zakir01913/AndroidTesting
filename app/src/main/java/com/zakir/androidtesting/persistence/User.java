@@ -13,7 +13,7 @@ import android.support.annotation.NonNull;
 @Entity(tableName = "users", indices = {@Index(value = "email", unique = true)})
 public class User {
     @PrimaryKey
-    public int id;
+    public long id;
 
     @NonNull
     @ColumnInfo(name = "first_name")
@@ -39,11 +39,11 @@ public class User {
         this.email = email;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

@@ -19,7 +19,7 @@ public class UserRepository {
         this.userDataSource = userDataSource;
     }
 
-    public Completable insertOrUpdate(User user) {
-        return userDataSource.insertOrUpdate(user);
+    public long insert(User user) {
+        return userDataSource.insert(user);
     }
 }

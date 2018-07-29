@@ -17,7 +17,7 @@ public interface UserDataSource {
 
     Flowable<User> getUserById(int userId);
 
-    Completable insertOrUpdate(User user);
+    long insert(User user);
 
     Completable delete(User user);
 }
