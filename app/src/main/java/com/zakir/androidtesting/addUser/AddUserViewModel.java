@@ -27,10 +27,13 @@ public class AddUserViewModel extends ViewModel {
         this.userRepository = userRepository;
     }
 
-    public void insertOrUpdate(User user) {
+    public void insert(User user) {
+        response.setValue(Response.loading());
         if (validate(user)) {
             this.user = user;
-            userRepository.insertOrUpdate(user);
+            long id = userRepository.insert(user);
+            user.setId(id);
+            response.setValue(Response.success(user));
         }
     }
 

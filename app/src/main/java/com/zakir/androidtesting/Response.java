@@ -24,6 +24,10 @@ public class Response<T> {
         return new Response<>(Status.ERROR, null, throwable);
     }
 
+    public static <T> Response<T> loading() {
+        return new Response<>(Status.LOADING, null, null);
+    }
+
     public Status getStatus() {
         return status;
     }

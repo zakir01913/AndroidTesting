@@ -12,14 +12,22 @@ import com.zakir.androidtesting.utils.UserTestUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by zakir on 27/7/18.
@@ -35,6 +43,9 @@ public class AdUserViewModelTest {
     @Mock
     Observer<Response<User>> responseObserver;
 
+    @Captor
+    ArgumentCaptor<Response<User>> argumentCaptor = ArgumentCaptor.forClass(Response.class);
+
     AddUserViewModel addUserViewModel;
 
     @Before
@@ -44,58 +55,70 @@ public class AdUserViewModelTest {
     }
 
     @Test
-    public void insertOrUpdate_withEmptyFistName_returnAddUserException() throws Exception {
+    public void insert_withUser_returnLoading() {
+        User user = UserTestUtils.createValidUser();
+        addUserViewModel.response().observeForever(responseObserver);
+
+        addUserViewModel.insert(user);
+
+        verify(responseObserver, times(2)).onChanged(argumentCaptor.capture());
+        List<Response<User>> responses = argumentCaptor.getAllValues();
+        assertThat(responses.get(0).getStatus(), is(equalTo(Status.LOADING)));
+    }
+
+    @Test
+    public void insert_withEmptyFistName_returnAddUserException() throws Exception {
         User user = UserTestUtils.createUserWithEmptyFirstName();
 
-        addUserViewModel.insertOrUpdate(user);
+        addUserViewModel.insert(user);
         checkErrorResponse(addUserViewModel.response().getValue(), AddUserException.ErrorCode.EMPTY_FIRST_NAME);
 
     }
 
     @Test
-    public void insertOrUpdate_withNullFistName_returnAddUserException() throws Exception {
+    public void insert_withNullFistName_returnAddUserException() throws Exception {
         User user = UserTestUtils.createUserWithNullFirstName();
 
-        addUserViewModel.insertOrUpdate(user);
+        addUserViewModel.insert(user);
         checkErrorResponse(addUserViewModel.response().getValue(), AddUserException.ErrorCode.EMPTY_FIRST_NAME);
 
     }
 
     @Test
-    public void insertOrUpdate_withEmptyLastName_returnAddUserException() throws Exception {
+    public void insert_withEmptyLastName_returnAddUserException() throws Exception {
         User user = UserTestUtils.createUserWithEmptyLastName();
 
-        addUserViewModel.insertOrUpdate(user);
+        addUserViewModel.insert(user);
 
         checkErrorResponse(addUserViewModel.response().getValue(), AddUserException.ErrorCode.EMPTY_LAST_NAME);
 
     }
 
     @Test
-    public void insertOrUpdate_nullEmptyLastName_returnAddUserException() throws Exception {
+    public void insert_nullEmptyLastName_returnAddUserException() throws Exception {
         User user = UserTestUtils.createUserWithNullLastName();
 
-        addUserViewModel.insertOrUpdate(user);
+        addUserViewModel.insert(user);
 
         checkErrorResponse(addUserViewModel.response().getValue(), AddUserException.ErrorCode.EMPTY_LAST_NAME);
 
     }
 
     @Test
-    public void insertOrUpdate_nullEmail_returnAddUserException() throws Exception {
+    public void insert_nullEmail_returnAddUserException() throws Exception {
         User user = UserTestUtils.createUserWithNullEmail();
 
-        addUserViewModel.insertOrUpdate(user);
+        addUserViewModel.insert(user);
 
         checkErrorResponse(addUserViewModel.response().getValue(), AddUserException.ErrorCode.INVALID_EMAIL);
 
     }
 
     @Test
-    public void insertOrUpdate_withInvalidEmail_returnAddUserException() throws Exception {
+    public void insert_withInvalidEmail_returnAddUserException() throws Exception {
         User user = UserTestUtils.createUserWithInvalidEmail();
 
-        addUserViewModel.insertOrUpdate(user);
+        addUserViewModel.insert(user);
 
         checkErrorResponse(addUserViewModel.response().getValue(), AddUserException.ErrorCode.INVALID_EMAIL);
 
@@ -107,6 +130,21 @@ public class AdUserViewModelTest {
         assertThat(response.getError(), instanceOf(AddUserException.class));
         AddUserException addUserException = (AddUserException) response.getError();
         assertThat(addUserException.getErrorCode(), is(equalTo(errorCode)));
+    }
+
+    @Test
+    public void insert_withValidUserData_returnSuccess() {
+        User user = UserTestUtils.createValidUser();
+        when(userRepository.insert(ArgumentMatchers.any(User.class))).thenReturn(1l);
+
+        addUserViewModel.insert(user);
+
+        Response<User> response = addUserViewModel.response().getValue();
+        assertThat(response, is(notNullValue()));
+        assertThat(response.getStatus(), is(equalTo(Status.SUCCESS)));
+        User user1 = response.getData();
+        assertThat(user1.getId(), is(equalTo(1l)));
+        assertThat(UserTestUtils.compareUser(user, user1), is(equalTo(true)));
     }
 
 }

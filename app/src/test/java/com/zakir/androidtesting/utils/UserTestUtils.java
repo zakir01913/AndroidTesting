@@ -10,8 +10,8 @@ public class UserTestUtils {
     public static boolean compareUser(User user1, User user2) {
         boolean flag = true;
         flag &= user1.getEmail().equals(user2.getEmail());
-        flag &= user1.getEmail().equals(user2.getFirstName());
-        flag &= user1.getEmail().equals(user2.getLastName());
+        flag &= user1.getFirstName().equals(user2.getFirstName());
+        flag &= user1.getLastName().equals(user2.getLastName());
         return flag;
     }
 
