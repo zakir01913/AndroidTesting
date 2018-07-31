@@ -18,7 +18,8 @@ import javax.inject.Inject;
 public class AddUserViewModel extends ViewModel {
     private UserRepository userRepository;
     private User user;
-    private MutableLiveData<Response<User>> response = new MutableLiveData<>();
+    @Inject
+    MutableLiveData<Response<User>> response;
     @Inject
     AddUserViewModel addUserViewModel;
 
@@ -28,9 +29,9 @@ public class AddUserViewModel extends ViewModel {
     }
 
     public void insert(User user) {
-        response.setValue(Response.loading());
         if (validate(user)) {
             this.user = user;
+            response.setValue(Response.loading());
             long id = userRepository.insert(user);
             user.setId(id);
             response.setValue(Response.success(user));
