@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Android Testing</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
+    <string name="email">Email</string>
+    <string name="designation">Designation</string>
+    <string name="company">Company</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 </resources>

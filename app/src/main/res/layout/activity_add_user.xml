@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.zakir.androidtesting.addUser.AddUserActivity">
+
+    <TextView
+        android:id="@+id/first_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/first_name"
+        app:layout_constraintBaseline_toBaselineOf="@+id/first_name_et"
+        app:layout_constraintStart_toStartOf="@id/vertical_left_16" />
+
+    <TextView
+        android:id="@+id/last_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/last_name"
+        app:layout_constraintBaseline_toBaselineOf="@+id/last_name_et"
+        app:layout_constraintStart_toStartOf="@id/vertical_left_16" />
+
+    <TextView
+        android:id="@+id/email_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/email"
+        app:layout_constraintBaseline_toBaselineOf="@+id/email_et"
+        app:layout_constraintStart_toStartOf="@id/vertical_left_16" />
+
+    <TextView
+        android:id="@+id/company_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/company"
+        app:layout_constraintBaseline_toBaselineOf="@+id/company_et"
+        app:layout_constraintStart_toStartOf="@id/vertical_left_16" />
+
+    <TextView
+        android:id="@+id/designation_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/designation"
+        app:layout_constraintBaseline_toBaselineOf="@+id/designation_et"
+        app:layout_constraintStart_toStartOf="@id/vertical_left_16" />
+
+    <EditText
+        android:id="@+id/first_name_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/first_name"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toEndOf="@+id/vertical_tv_barrier"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/last_name_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/last_name"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toEndOf="@+id/vertical_tv_barrier"
+        app:layout_constraintTop_toBottomOf="@+id/first_name_et" />
+
+    <EditText
+        android:id="@+id/email_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toEndOf="@+id/vertical_tv_barrier"
+        app:layout_constraintTop_toBottomOf="@+id/last_name_et" />
+
+    <EditText
+        android:id="@+id/company_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/company"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toEndOf="@+id/vertical_tv_barrier"
+        app:layout_constraintTop_toBottomOf="@+id/email_et" />
+
+    <EditText
+        android:id="@+id/designation_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/designation"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toEndOf="@+id/vertical_tv_barrier"
+        app:layout_constraintTop_toBottomOf="@+id/company_et" />
+
+    <Button
+        android:id="@+id/cancel_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        app:layout_constraintBaseline_toBaselineOf="@+id/done_btn"
+        app:layout_constraintEnd_toStartOf="@+id/done_btn"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/done_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cancel_btn"
+        app:layout_constraintTop_toBottomOf="@+id/designation_et" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/vertical_left_16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <android.support.constraint.Barrier
+        android:id="@+id/vertical_tv_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="right"
+        app:constraint_referenced_ids="designation_tv,email_tv,first_name_tv,company_tv,last_name_tv"
+        tools:layout_editor_absoluteX="384dp" />
+
+</android.support.constraint.ConstraintLayout>
