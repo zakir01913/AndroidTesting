@@ -17,6 +17,7 @@ versions.rxjava2 = "2.1.3"
 versions.rx_android = "2.0.1"
 versions.hamcrest = "1.3"
 versions.dexmaker = "2.2.0"
+versions.butterknife = "8.8.1"
 
 def deps = [:]
 
@@ -55,6 +56,10 @@ dagger.compiler = "com.google.dagger:dagger-compiler:$versions.dagger"
 dagger.android_support_compiler = "com.google.dagger:dagger-android-processor:$versions.dagger"
 deps.dagger = dagger
 
+def butterknife = [:]
+butterknife.implementation = "com.jakewharton:butterknife:$versions.butterknife"
+butterknife.annotationProcessor = "com.jakewharton:butterknife-compiler:$versions.butterknife"
+deps.butterknife = butterknife
 
 def espresso = [:]
 espresso.core = "com.android.support.test.espresso:espresso-core:$versions.espresso"

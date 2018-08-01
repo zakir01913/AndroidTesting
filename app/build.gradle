@@ -20,6 +20,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        String sharedTestDir = 'src/testShared/java'
+
+        test {
+            java.srcDir sharedTestDir
+        }
+
+        androidTest {
+            java.srcDir sharedTestDir
+        }
+    }
 }
 
 dependencies {
@@ -49,6 +61,10 @@ dependencies {
 
     //
     compile 'commons-validator:commons-validator:1.6'
+
+    // butter nife
+    implementation deps.butterknife.implementation
+    annotationProcessor deps.butterknife.annotationProcessor
 
     // Dependencies for local unit tests
     testImplementation deps.junit
