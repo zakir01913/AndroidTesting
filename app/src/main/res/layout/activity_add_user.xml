@@ -148,4 +148,15 @@
         app:constraint_referenced_ids="designation_tv,email_tv,first_name_tv,company_tv,last_name_tv"
         tools:layout_editor_absoluteX="384dp" />
 
+    <ProgressBar
+        android:id="@+id/add_user_pb"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

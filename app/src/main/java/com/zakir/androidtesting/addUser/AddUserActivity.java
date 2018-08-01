@@ -2,7 +2,9 @@ package com.zakir.androidtesting.addUser;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.zakir.androidtesting.R;
 import com.zakir.androidtesting.Response;
@@ -30,6 +32,9 @@ public class AddUserActivity extends AppCompatActivity {
     @BindView(R.id.designation_et)
     EditText designationEditText;
 
+    @BindView(R.id.add_user_pb)
+    ProgressBar progressBar;
+
     AddUserViewModel addUserViewModel;
     User user;
 
@@ -52,7 +57,7 @@ public class AddUserActivity extends AppCompatActivity {
                 lastNameEditText.getText().toString(),
                 emailEditText.getText().toString());
         user.setCompany(companyEditText.getText().toString());
-        user.setDesignation(companyEditText.getText().toString());
+        user.setDesignation(designationEditText.getText().toString());
         addUserViewModel.insert(user);
     }
 
@@ -68,6 +73,12 @@ public class AddUserActivity extends AppCompatActivity {
             else if (addUserException.errorCode == AddUserException.ErrorCode.INVALID_EMAIL) {
                 emailEditText.setError(addUserException.getMessage());
             }
+        }
+        else if (responseObserver.getStatus() == Status.LOADING) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        else if (responseObserver.getStatus() == Status.SUCCESS) {
+            progressBar.setVisibility(View.GONE);
         }
     }
 }
