@@ -1,9 +1,7 @@
 package com.zakir.androidtesting.addUser;
 
-import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -23,7 +21,17 @@ import org.mockito.MockitoAnnotations;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static org.mockito.ArgumentMatchers.isA;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static android.support.test.espresso.matcher.ViewMatchers.hasErrorText;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,10 +41,10 @@ public class AddUserActivityTest {
 
     @Mock
     AddUserViewModel addUserViewModel;
-    @Mock
-    MutableLiveData<Response<User>> responseMutableLiveData;
-    @Captor
-    ArgumentCaptor<Observer<Response<User>>> observerArgumentCaptor;
+    MutableLiveData<Response<User>> responseMutableLiveData = new MutableLiveData<>();
+
+    private final String FIST_NAME = "First Name";
+    private final String LAST_NAME = "Last Name";
 
     @Rule
     public ActivityTestRule<AddUserActivity> addUserActivityActivityTestRule = new ActivityTestRule<>(
@@ -49,19 +57,47 @@ public class AddUserActivityTest {
         addUserActivityActivityTestRule.getActivity().addUserViewModel = addUserViewModel;
         when(addUserViewModel.response()).thenReturn(responseMutableLiveData);
         addUserActivityActivityTestRule.getActivity().setAddUserViewModel(addUserViewModel);
-        verify(responseMutableLiveData).observe(isA(LifecycleOwner.class), observerArgumentCaptor.capture());
     }
 
     @Test
     public void save_callAddUserViewModelInsert() {
 
-        onView(ViewMatchers.withId(R.id.save_btn)).perform(click());
+        onView(withId(R.id.save_btn)).perform(click());
 
-        verify(addUserViewModel).insert(null);
+        verify(addUserViewModel).insert(any(User.class));
     }
 
     @Test
-    public void save_withEmptyFirstName_showError() {
+    public void postValue_withEmptyFirstName_showErrorInFirstNameEditText() {
+        String errorMessage = "First name can't be empty";
 
+        responseMutableLiveData.postValue(Response.error(
+                    new AddUserException(errorMessage, AddUserException.ErrorCode.EMPTY_FIRST_NAME)));
+
+        onView(withId(R.id.first_name_et)).check(matches(hasErrorText(errorMessage)));
     }
+
+    @Test
+    public void postValue_withEmptyLastName_showErrorInLastNameEditText() {
+        String errorMessage = "Last name can't be empty";
+
+        responseMutableLiveData.postValue(Response.error(
+                new AddUserException(errorMessage, AddUserException.ErrorCode.EMPTY_LAST_NAME)));
+
+        onView(withId(R.id.first_name_et)).check(matches(not(hasErrorText(errorMessage))));
+        onView(withId(R.id.last_name_et)).check(matches(hasErrorText(errorMessage)));
+    }
+
+    @Test
+    public void postValue_withInvalidEmail_showErrorInEmailEditText() {
+        String errorMessage = "Email can't be empty";
+
+        responseMutableLiveData.postValue(Response.error(
+                new AddUserException(errorMessage, AddUserException.ErrorCode.INVALID_EMAIL)));
+
+        onView(withId(R.id.first_name_et)).check(matches(not(hasErrorText(errorMessage))));
+        onView(withId(R.id.last_name_et)).check(matches(not(hasErrorText(errorMessage))));
+        onView(withId(R.id.email_et)).check(matches(hasErrorText(errorMessage)));
+    }
+
 }
