@@ -2,6 +2,11 @@ package com.zakir.androidtesting.utils;
 
 import com.zakir.androidtesting.persistence.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.Flowable;
+
 /**
  * Created by Zakir Hossain on 7/28/18.
  */
@@ -41,5 +46,21 @@ public class UserTestUtils {
 
     public static User createValidUser() {
         return new User("FirstName", "LastName", "email@example.com");
+    }
+
+    public static List<User> getUsers(int numberOfUsers) {
+        List<User> userList = new ArrayList<>();
+        for (int i = 0; i < numberOfUsers; i++) {
+            User user = new User(
+                    "First Name" + i,
+                    "Last Name" + i,
+                    "email" + i + "@example.com"
+            );
+            user.setCompany("Company" + i);
+            user.setDesignation("Designation" + i);
+            userList.add(user);
+        }
+
+        return userList;
     }
 }
