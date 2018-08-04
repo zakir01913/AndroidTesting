@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".addUser.AddUserActivity"></activity>
+        <activity android:name=".testing.SingleFragmentTestActivity" />
     </application>
 
 </manifest>
