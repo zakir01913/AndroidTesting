@@ -25,7 +25,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/user_list_loading_fl"
+        android:id="@+id/user_list_loader_fl"
         android:visibility="gone">
 
         <ProgressBar
