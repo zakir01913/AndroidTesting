@@ -1,4 +1,4 @@
-package com.zakir.androidtesting;
+package com.zakir.androidtesting.user;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -7,15 +7,24 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.FrameLayout;
 
+import com.zakir.androidtesting.R;
+import com.zakir.androidtesting.Response;
+import com.zakir.androidtesting.Status;
+import com.zakir.androidtesting.UserViewModel;
 import com.zakir.androidtesting.addUser.AddUserActivity;
 import com.zakir.androidtesting.persistence.User;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,8 +34,15 @@ public class UserListFragment extends Fragment {
 
     @BindView(R.id.user_list_loader_fl)
     FrameLayout userListLoaderFL;
+    @BindView(R.id.user_list_rv)
+    RecyclerView userRecyclerView;
 
+    @Inject
+    public
     ViewModelProvider.Factory viewModelFactory;
+
+    private UserListAdapter userListAdapter = new UserListAdapter();
+
     private UserViewModel userViewModel;
 
     @Nullable
@@ -45,6 +61,10 @@ public class UserListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         userViewModel = ViewModelProviders.of(this, viewModelFactory)
         .get(UserViewModel.class);
+
+        userRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        userRecyclerView.setAdapter(userListAdapter);
+
         userViewModel.getResponseMutableLiveData().observe(this,
                 listResponse -> handleResponse(listResponse));
     }
@@ -58,6 +78,10 @@ public class UserListFragment extends Fragment {
     private void handleResponse(Response<List<User>> listResponse) {
         if (listResponse.getStatus() == Status.LOADING) {
             userListLoaderFL.setVisibility(View.VISIBLE);
+        }
+        else if (listResponse.getStatus() == Status.SUCCESS) {
+            userListLoaderFL.setVisibility(View.GONE);
+            userListAdapter.setUserList(listResponse.getData());
         }
     }
 }

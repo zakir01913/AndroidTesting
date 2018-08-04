@@ -3,6 +3,8 @@ package com.zakir.androidtesting;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.zakir.androidtesting.user.UserListFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     UserListFragment userListFragment;

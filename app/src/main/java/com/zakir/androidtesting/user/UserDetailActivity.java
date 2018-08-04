@@ -1,4 +1,4 @@
-package com.zakir.androidtesting;
+package com.zakir.androidtesting.user;
 
 import android.app.Activity;
 
