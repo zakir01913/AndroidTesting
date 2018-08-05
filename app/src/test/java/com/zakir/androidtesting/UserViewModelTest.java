@@ -47,7 +47,7 @@ public class UserViewModelTest {
         userViewModel.userRepository = userRepository;
         userViewModel.subscribeSchedular = testScheduler;
         userViewModel.observeSchedular = testScheduler;
-        responseMutableLiveData = userViewModel.getResponseMutableLiveData();
+        responseMutableLiveData = userViewModel.getUsersMutableLiveData();
     }
 
     @Test

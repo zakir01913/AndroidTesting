@@ -49,7 +49,7 @@ public class UserListFragmentTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        when(userViewModel.getResponseMutableLiveData()).thenReturn(responseMutableLiveData);
+        when(userViewModel.getUsersMutableLiveData()).thenReturn(responseMutableLiveData);
 
         userListFragment.viewModelFactory = ViewModelUtil.createFactory(userViewModel);
         testActivityActivityTestRule.getActivity().setFragment(userListFragment);

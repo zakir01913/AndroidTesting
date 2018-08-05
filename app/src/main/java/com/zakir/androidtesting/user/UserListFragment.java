@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.FrameLayout;
 
 import com.zakir.androidtesting.R;
@@ -65,7 +64,7 @@ public class UserListFragment extends Fragment {
         userRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         userRecyclerView.setAdapter(userListAdapter);
 
-        userViewModel.getResponseMutableLiveData().observe(this,
+        userViewModel.getUsersMutableLiveData().observe(this,
                 listResponse -> handleResponse(listResponse));
     }
 

@@ -36,7 +36,7 @@ public class UserViewModel extends ViewModel {
                 ));
     }
 
-    public MutableLiveData<Response<List<User>>> getResponseMutableLiveData() {
+    public MutableLiveData<Response<List<User>>> getUsersMutableLiveData() {
         return responseMutableLiveData;
     }
 

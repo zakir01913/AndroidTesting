@@ -46,7 +46,7 @@ public class MainActivityTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        when(userViewModel.getResponseMutableLiveData()).thenReturn(responseMutableLiveData);
+        when(userViewModel.getUsersMutableLiveData()).thenReturn(responseMutableLiveData);
     }
 
 
