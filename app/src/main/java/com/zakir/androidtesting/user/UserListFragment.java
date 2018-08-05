@@ -29,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class UserListFragment extends Fragment {
+public class UserListFragment extends Fragment implements UserListAdapter.ItemClickListener {
 
     @BindView(R.id.user_list_loader_fl)
     FrameLayout userListLoaderFL;
@@ -63,6 +63,7 @@ public class UserListFragment extends Fragment {
 
         userRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         userRecyclerView.setAdapter(userListAdapter);
+        userListAdapter.setItemClickListener(this);
 
         userViewModel.getUsersMutableLiveData().observe(this,
                 listResponse -> handleResponse(listResponse));
@@ -82,5 +83,14 @@ public class UserListFragment extends Fragment {
             userListLoaderFL.setVisibility(View.GONE);
             userListAdapter.setUserList(listResponse.getData());
         }
+    }
+
+    @Override
+    public void onItemClick(long userId) {
+        ((Contract)getActivity()).onUserSelected(userId);
+    }
+
+    public interface Contract {
+        void onUserSelected(long userId);
     }
 }

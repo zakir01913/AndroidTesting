@@ -66,7 +66,9 @@ public class UserDetailFragment extends Fragment {
 
         if (savedInstanceState != null)
             userId = savedInstanceState.getLong(USER_ID_KEY);
+    }
 
+    public void loadUser() {
         userViewModel.loadUser(userId);
     }
 

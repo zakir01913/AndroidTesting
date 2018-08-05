@@ -3,11 +3,13 @@ package com.zakir.androidtesting;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.zakir.androidtesting.user.UserDetailFragment;
 import com.zakir.androidtesting.user.UserListFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UserListFragment.Contract {
 
     UserListFragment userListFragment;
+    UserDetailFragment userDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,20 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.user_list, userListFragment)
                     .commit();
         }
+
+        userDetailFragment = (UserDetailFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.user_detail);
+
+        if (userDetailFragment == null && findViewById(R.id.user_detail) != null) {
+            userDetailFragment = new UserDetailFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.user_detail, userDetailFragment)
+                    .commit();
+        }
     }
 
+    @Override
+    public void onUserSelected(long userId) {
+
+    }
 }
