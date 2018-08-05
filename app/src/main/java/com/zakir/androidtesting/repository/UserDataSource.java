@@ -19,5 +19,5 @@ public interface UserDataSource {
 
     long insert(User user);
 
-    Completable delete(User user);
+    int delete(User user);
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import io.reactivex.Flowable;
 
 @Dao
-interface UserDao {
+public interface UserDao {
 
     @Query("SELECT * FROM USERS")
     Flowable<List<User>> getUsers();
@@ -23,5 +23,5 @@ interface UserDao {
     long insertUser(User user);
 
     @Delete
-    void deleteUser(User user);
+    int deleteUser(User user);
 }
