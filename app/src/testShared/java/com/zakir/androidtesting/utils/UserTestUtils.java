@@ -45,7 +45,10 @@ public class UserTestUtils {
     }
 
     public static User createValidUser() {
-        return new User("FirstName", "LastName", "email@example.com");
+        User user = new User("FirstName", "LastName", "email@example.com");
+        user.setCompany("Company");
+        user.setDesignation("Designation");
+        return user;
     }
 
     public static List<User> getUsers(int numberOfUsers) {

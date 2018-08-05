@@ -58,7 +58,7 @@ public class UserListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        userViewModel = ViewModelProviders.of(this, viewModelFactory)
+        userViewModel = ViewModelProviders.of(getActivity(), viewModelFactory)
         .get(UserViewModel.class);
 
         userRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

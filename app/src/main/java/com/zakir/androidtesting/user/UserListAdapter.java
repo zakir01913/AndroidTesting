@@ -51,7 +51,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
         public UserListViewHolder(View itemView) {
             super(itemView);
 
-            userNameTextView = itemView.findViewById(R.id.user_name_tv);
+            userNameTextView = itemView.findViewById(R.id.user_name_label_tv);
             userEmailTextView = itemView.findViewById(R.id.user_email_tv);
         }
     }

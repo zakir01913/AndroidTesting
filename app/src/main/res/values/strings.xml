@@ -7,4 +7,5 @@
     <string name="company">Company</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="user_name">Name</string>
 </resources>
