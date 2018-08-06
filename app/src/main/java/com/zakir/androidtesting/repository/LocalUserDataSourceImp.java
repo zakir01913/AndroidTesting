@@ -5,16 +5,11 @@ import com.zakir.androidtesting.persistence.UserDao;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
-import io.reactivex.Completable;
 import io.reactivex.Flowable;
-
 public class LocalUserDataSourceImp implements UserDataSource {
 
     UserDao userDao;
 
-    @Inject
     public LocalUserDataSourceImp(UserDao userDao) {
         this.userDao = userDao;
     }

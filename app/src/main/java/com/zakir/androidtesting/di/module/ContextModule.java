@@ -2,6 +2,8 @@ package com.zakir.androidtesting.di.module;
 
 import android.content.Context;
 
+import com.zakir.androidtesting.di.ApplicationContext;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -17,6 +19,7 @@ public class ContextModule {
     }
 
     @Provides
+    @ApplicationContext
     Context applicationContext() {
         return context;
     }

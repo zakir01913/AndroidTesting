@@ -1,6 +1,5 @@
 package com.zakir.androidtesting.user;
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,10 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.zakir.androidtesting.AndroidTestingApplication;
 import com.zakir.androidtesting.R;
 import com.zakir.androidtesting.Response;
 import com.zakir.androidtesting.Status;
 import com.zakir.androidtesting.UserViewModel;
+import com.zakir.androidtesting.UserViewModelFactory;
 import com.zakir.androidtesting.addUser.AddUserActivity;
 import com.zakir.androidtesting.persistence.User;
 
@@ -37,8 +38,7 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
     RecyclerView userRecyclerView;
 
     @Inject
-    public
-    ViewModelProvider.Factory viewModelFactory;
+    public UserViewModelFactory viewModelFactory;
 
     private UserListAdapter userListAdapter = new UserListAdapter();
 
@@ -58,6 +58,10 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        UserListFragmentComponent component = AndroidTestingApplication.get(getActivity())
+                .createUserListFragmentComponent(this);
+        component.injectUserListFragment(this);
+
         userViewModel = ViewModelProviders.of(getActivity(), viewModelFactory)
         .get(UserViewModel.class);
 
@@ -67,6 +71,7 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
 
         userViewModel.getUsersMutableLiveData().observe(this,
                 listResponse -> handleResponse(listResponse));
+
     }
 
     @OnClick(R.id.add_user_fab)
@@ -92,5 +97,11 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
 
     public interface Contract {
         void onUserSelected(long userId);
+    }
+
+    @Override
+    public void onDetach() {
+        AndroidTestingApplication.get(getActivity()).realeaseUserListFragmentComponent();
+        super.onDetach();
     }
 }

@@ -3,6 +3,9 @@ package com.zakir.androidtesting;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
+import com.zakir.androidtesting.di.LocalUserRepository;
+import com.zakir.androidtesting.di.ObserverScheduler;
+import com.zakir.androidtesting.di.SubscribeScheduler;
 import com.zakir.androidtesting.persistence.User;
 import com.zakir.androidtesting.repository.UserRepository;
 
@@ -19,13 +22,21 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class UserViewModel extends ViewModel {
 
-    @Inject
     UserRepository userRepository;
     MutableLiveData<Response<List<User>>> responseMutableLiveData = new MutableLiveData<>();
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     Scheduler subscribeSchedular, observeSchedular;
     private MutableLiveData<Response<User>> userMutableLiveData = new MutableLiveData<>();
     private Map<Long, User> userMap = new HashedMap();
+
+    @Inject
+    public UserViewModel(@LocalUserRepository UserRepository userRepository,
+                         @SubscribeScheduler Scheduler subscribeScheduler,
+                         @ObserverScheduler Scheduler observeScheduler) {
+        this.userRepository = userRepository;
+        this.subscribeSchedular = subscribeScheduler;
+        this.observeSchedular = observeScheduler;
+    }
 
     public void loadUsers() {
         compositeDisposable.add(userRepository.getUsers()
