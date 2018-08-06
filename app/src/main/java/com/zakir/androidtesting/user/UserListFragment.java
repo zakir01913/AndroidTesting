@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +20,6 @@ import com.zakir.androidtesting.R;
 import com.zakir.androidtesting.Response;
 import com.zakir.androidtesting.Status;
 import com.zakir.androidtesting.UserViewModel;
-import com.zakir.androidtesting.UserViewModelFactory;
 import com.zakir.androidtesting.UserViewModelFactoryType;
 import com.zakir.androidtesting.addUser.AddUserActivity;
 import com.zakir.androidtesting.persistence.User;
@@ -31,6 +31,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 
 public class UserListFragment extends Fragment implements UserListAdapter.ItemClickListener {
 
@@ -47,11 +48,12 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
 
     private UserViewModel userViewModel;
 
+    private UserViewModel viewModel;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
         View view = inflater.inflate(R.layout.fragment_user_list, container, false);
         ButterKnife.bind(this, view);
 
@@ -74,6 +76,10 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
 
         userViewModel.getUsersMutableLiveData().observe(this,
                 listResponse -> handleResponse(listResponse));
+//
+//        if (countingResource != null) {
+//            countingResource.decrement();
+//        }
 
     }
 
@@ -106,5 +112,17 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
     public void onDetach() {
         AndroidTestingApplication.get(getActivity()).realeaseUserListFragmentComponent();
         super.onDetach();
+    }
+
+//    @VisibleForTesting
+//    public void setCountingResource(CountingIdlingResource countingResource) {
+//        this.countingResource = countingResource;
+//    }
+
+    @VisibleForTesting
+    public void setUserViewModel(UserViewModel userViewModel) {
+        this.userViewModel = userViewModel;
+        userViewModel.getUsersMutableLiveData().observe(this,
+                listResponse -> handleResponse(listResponse));
     }
 }

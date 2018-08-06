@@ -2,13 +2,13 @@ package com.zakir.androidtesting;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.lifecycle.MutableLiveData;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.zakir.androidtesting.persistence.User;
 import com.zakir.androidtesting.testing.SingleFragmentTestActivity;
 import com.zakir.androidtesting.user.UserListFragment;
-import com.zakir.androidtesting.util.ViewModelUtil;
 import com.zakir.androidtesting.utils.UserTestUtils;
 
 import org.junit.Before;
@@ -25,8 +25,8 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -50,13 +50,14 @@ public class UserListFragmentTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         when(userViewModel.getUsersMutableLiveData()).thenReturn(responseMutableLiveData);
-
-        userListFragment.viewModelFactory = ViewModelUtil.createFactory(userViewModel);
+        userListFragment.setUserViewModel(userViewModel);
         testActivityActivityTestRule.getActivity().setFragment(userListFragment);
     }
 
+
     @Test
     public void response_withLoadingStatus_showUserLoaderPB() {
+        verify(userViewModel).getUsersMutableLiveData();
         responseMutableLiveData.postValue(Response.loading());
 
         onView(withId(R.id.user_list_pb)).check(matches(isDisplayed()));
