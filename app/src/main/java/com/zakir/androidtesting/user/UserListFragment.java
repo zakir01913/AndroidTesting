@@ -1,5 +1,6 @@
 package com.zakir.androidtesting.user;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.zakir.androidtesting.Response;
 import com.zakir.androidtesting.Status;
 import com.zakir.androidtesting.UserViewModel;
 import com.zakir.androidtesting.UserViewModelFactory;
+import com.zakir.androidtesting.UserViewModelFactoryType;
 import com.zakir.androidtesting.addUser.AddUserActivity;
 import com.zakir.androidtesting.persistence.User;
 
@@ -38,7 +40,8 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
     RecyclerView userRecyclerView;
 
     @Inject
-    public UserViewModelFactory viewModelFactory;
+    @UserViewModelFactoryType
+    public ViewModelProvider.Factory viewModelFactory;
 
     private UserListAdapter userListAdapter = new UserListAdapter();
 

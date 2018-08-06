@@ -1,6 +1,8 @@
 package com.zakir.androidtesting.addUser;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -10,6 +12,8 @@ import com.zakir.androidtesting.R;
 import com.zakir.androidtesting.Response;
 import com.zakir.androidtesting.Status;
 import com.zakir.androidtesting.persistence.User;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +39,9 @@ public class AddUserActivity extends AppCompatActivity {
     @BindView(R.id.add_user_pb)
     ProgressBar progressBar;
 
+    @Inject
+    AddUserViewModelFactory addUserViewModelFactory;
+
     AddUserViewModel addUserViewModel;
     User user;
 
@@ -43,8 +50,11 @@ public class AddUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_user);
         ButterKnife.bind(this);
+        addUserViewModel = ViewModelProviders.of(this, addUserViewModelFactory)
+                .get(AddUserViewModel.class);
     }
 
+    @VisibleForTesting
     public void setAddUserViewModel(AddUserViewModel addUserViewModel) {
         this.addUserViewModel = addUserViewModel;
         this.addUserViewModel.response().observe(this, observer -> handleResponse(observer));

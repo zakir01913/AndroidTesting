@@ -43,10 +43,7 @@ public class UserViewModelTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        userViewModel = new UserViewModel();
-        userViewModel.userRepository = userRepository;
-        userViewModel.subscribeSchedular = testScheduler;
-        userViewModel.observeSchedular = testScheduler;
+        userViewModel = new UserViewModel(userRepository, testScheduler, testScheduler );
         responseMutableLiveData = userViewModel.getUsersMutableLiveData();
     }
 

@@ -1,9 +1,11 @@
 package com.zakir.androidtesting.di.module;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 
 import com.zakir.androidtesting.UserViewModel;
 import com.zakir.androidtesting.UserViewModelFactory;
+import com.zakir.androidtesting.UserViewModelFactoryType;
 import com.zakir.androidtesting.di.ApplicationContext;
 import com.zakir.androidtesting.di.LocalUserRepository;
 import com.zakir.androidtesting.di.ObserverScheduler;
@@ -51,7 +53,8 @@ public class ApplicationModule {
     }
 
     @Provides
-    public UserViewModelFactory userViewModelFactory(UserViewModel userViewModel) {
+    @UserViewModelFactoryType
+    public ViewModelProvider.Factory userViewModelFactory(UserViewModel userViewModel) {
         return new UserViewModelFactory(userViewModel);
     }
 

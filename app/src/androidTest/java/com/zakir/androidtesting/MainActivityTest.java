@@ -61,11 +61,4 @@ public class MainActivityTest {
         onView(withId(R.id.user_list)).check(matches(isDisplayed()));
     }
 
-    @Test
-    public void response_withLoadingStatus_showLoadingProgressBar() {
-        responseMutableLiveData.setValue(Response.loading());
-
-        onView(withId(R.id.user_list_pb)).check(matches(isDisplayed()));
-    }
-
 }

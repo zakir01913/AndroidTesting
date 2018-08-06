@@ -16,17 +16,10 @@ import javax.inject.Inject;
  */
 
 public class AddUserViewModel extends ViewModel {
-    private UserRepository userRepository;
+    @Inject
+    UserRepository userRepository;
     private User user;
-    @Inject
-    MutableLiveData<Response<User>> response;
-    @Inject
-    AddUserViewModel addUserViewModel;
-
-    @Inject
-    public AddUserViewModel(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private MutableLiveData<Response<User>> response = new MutableLiveData<>();
 
     public void insert(User user) {
         if (validate(user)) {

@@ -21,6 +21,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -44,9 +45,6 @@ public class AdUserViewModelTest {
     @Mock
     Observer<Response<User>> responseObserver;
 
-    @Mock
-    MutableLiveData<Response<User>> responseMutableLiveData;
-
     @Captor
     ArgumentCaptor<Response<User>> argumentCaptor = ArgumentCaptor.forClass(Response.class);
 
@@ -55,8 +53,9 @@ public class AdUserViewModelTest {
     @Before
     public void setup() throws Exception{
         MockitoAnnotations.initMocks(this);
-        addUserViewModel = new AddUserViewModel(userRepository);
-        addUserViewModel.response = responseMutableLiveData;
+        addUserViewModel = new AddUserViewModel();
+        addUserViewModel.userRepository = userRepository;
+        addUserViewModel.response().observeForever(responseObserver);
     }
 
     @Test
@@ -65,7 +64,7 @@ public class AdUserViewModelTest {
 
         addUserViewModel.insert(user);
 
-        verify(responseMutableLiveData, times(2)).setValue(argumentCaptor.capture());
+        verify(responseObserver, times(2)).onChanged(argumentCaptor.capture());
         List<Response<User>> responses = argumentCaptor.getAllValues();
         assertThat(responses.get(0).getStatus(), is(equalTo(Status.LOADING)));
     }
@@ -76,7 +75,7 @@ public class AdUserViewModelTest {
 
         addUserViewModel.insert(user);
 
-        verify(responseMutableLiveData, times(1)).setValue(argumentCaptor.capture());
+        verify(responseObserver, times(1)).onChanged(argumentCaptor.capture());
         checkErrorResponse(argumentCaptor.getValue(), AddUserException.ErrorCode.EMPTY_FIRST_NAME);
 
     }
@@ -87,7 +86,7 @@ public class AdUserViewModelTest {
 
         addUserViewModel.insert(user);
 
-        verify(responseMutableLiveData, times(1)).setValue(argumentCaptor.capture());
+        verify(responseObserver, times(1)).onChanged(argumentCaptor.capture());
         checkErrorResponse(argumentCaptor.getValue(), AddUserException.ErrorCode.EMPTY_FIRST_NAME);
 
     }
@@ -98,7 +97,7 @@ public class AdUserViewModelTest {
         
         addUserViewModel.insert(user);
 
-        verify(responseMutableLiveData, times(1)).setValue(argumentCaptor.capture());
+        verify(responseObserver, times(1)).onChanged(argumentCaptor.capture());
         checkErrorResponse(argumentCaptor.getValue(), AddUserException.ErrorCode.EMPTY_LAST_NAME);
 
     }
@@ -109,7 +108,7 @@ public class AdUserViewModelTest {
 
         addUserViewModel.insert(user);
 
-        verify(responseMutableLiveData, times(1)).setValue(argumentCaptor.capture());
+        verify(responseObserver, times(1)).onChanged(argumentCaptor.capture());
         checkErrorResponse(argumentCaptor.getValue(), AddUserException.ErrorCode.EMPTY_LAST_NAME);
 
     }
@@ -120,7 +119,7 @@ public class AdUserViewModelTest {
 
         addUserViewModel.insert(user);
 
-        verify(responseMutableLiveData, times(1)).setValue(argumentCaptor.capture());
+        verify(responseObserver, times(1)).onChanged(argumentCaptor.capture());
         checkErrorResponse(argumentCaptor.getValue(), AddUserException.ErrorCode.INVALID_EMAIL);
 
     }
@@ -131,7 +130,7 @@ public class AdUserViewModelTest {
 
         addUserViewModel.insert(user);
 
-        verify(responseMutableLiveData, times(1)).setValue(argumentCaptor.capture());
+        verify(responseObserver, times(1)).onChanged(argumentCaptor.capture());
         checkErrorResponse(argumentCaptor.getValue(), AddUserException.ErrorCode.INVALID_EMAIL);
 
     }
@@ -151,7 +150,7 @@ public class AdUserViewModelTest {
 
         addUserViewModel.insert(user);
 
-        verify(responseMutableLiveData, times(2)).setValue(argumentCaptor.capture());
+        verify(responseObserver, times(2)).onChanged(argumentCaptor.capture());
         Response<User> response = argumentCaptor.getValue();
         assertThat(response, is(notNullValue()));
         assertThat(response.getStatus(), is(equalTo(Status.SUCCESS)));
