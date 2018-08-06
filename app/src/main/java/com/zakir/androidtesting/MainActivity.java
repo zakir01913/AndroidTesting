@@ -40,4 +40,10 @@ public class MainActivity extends AppCompatActivity implements UserListFragment.
     public void onUserSelected(long userId) {
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        userListFragment.loadUser();
+    }
 }

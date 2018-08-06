@@ -76,11 +76,7 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
 
         userViewModel.getUsersMutableLiveData().observe(this,
                 listResponse -> handleResponse(listResponse));
-//
-//        if (countingResource != null) {
-//            countingResource.decrement();
-//        }
-
+        userViewModel.loadUsers();
     }
 
     @OnClick(R.id.add_user_fab)
@@ -96,6 +92,10 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
         else if (listResponse.getStatus() == Status.SUCCESS) {
             userListLoaderFL.setVisibility(View.GONE);
             userListAdapter.setUserList(listResponse.getData());
+        }
+        else if (listResponse.getStatus() == Status.ERROR) {
+            userListLoaderFL.setVisibility(View.GONE);
+            listResponse.getError().printStackTrace();
         }
     }
 
@@ -114,15 +114,14 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
         super.onDetach();
     }
 
-//    @VisibleForTesting
-//    public void setCountingResource(CountingIdlingResource countingResource) {
-//        this.countingResource = countingResource;
-//    }
-
     @VisibleForTesting
     public void setUserViewModel(UserViewModel userViewModel) {
         this.userViewModel = userViewModel;
         userViewModel.getUsersMutableLiveData().observe(this,
                 listResponse -> handleResponse(listResponse));
+    }
+
+    public void loadUser() {
+        userViewModel.loadUsers();
     }
 }

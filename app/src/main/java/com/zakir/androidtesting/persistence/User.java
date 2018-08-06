@@ -12,8 +12,8 @@ import android.support.annotation.NonNull;
  */
 @Entity(tableName = "users", indices = {@Index(value = "email", unique = true)})
 public class User {
-    @PrimaryKey
-    public long id;
+    @PrimaryKey(autoGenerate = true)
+    public Long id;
 
     @NonNull
     @ColumnInfo(name = "first_name")

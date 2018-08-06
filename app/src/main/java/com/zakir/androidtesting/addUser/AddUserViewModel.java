@@ -4,6 +4,9 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.zakir.androidtesting.Response;
+import com.zakir.androidtesting.di.LocalUserRepository;
+import com.zakir.androidtesting.di.ObserverScheduler;
+import com.zakir.androidtesting.di.SubscribeScheduler;
 import com.zakir.androidtesting.persistence.User;
 import com.zakir.androidtesting.repository.UserRepository;
 
@@ -11,23 +14,48 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by zakir on 26/7/18.
  */
 
 public class AddUserViewModel extends ViewModel {
-    @Inject
     UserRepository userRepository;
     private User user;
     private MutableLiveData<Response<User>> response = new MutableLiveData<>();
+    private Scheduler subscribeScheduler;
+    private Scheduler observerScheduler;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    @Inject
+    public AddUserViewModel(
+            @LocalUserRepository UserRepository userRepository,
+            @SubscribeScheduler Scheduler subscribeScheduler,
+            @ObserverScheduler Scheduler observerScheduler
+    ) {
+        this.userRepository = userRepository;
+        this.subscribeScheduler = subscribeScheduler;
+        this.observerScheduler = observerScheduler;
+    }
 
     public void insert(User user) {
         if (validate(user)) {
             this.user = user;
-            response.setValue(Response.loading());
-            long id = userRepository.insert(user);
-            user.setId(id);
-            response.setValue(Response.success(user));
+            compositeDisposable.add(Observable.fromCallable(() -> {
+                long id = userRepository.insert(user);
+                return id;
+            })
+            .subscribeOn(subscribeScheduler)
+            .observeOn(observerScheduler)
+            .subscribe(id -> {
+                System.out.println(id);
+                user.setId(id);
+                response.setValue(Response.success(user));
+            }));
         }
     }
 
@@ -53,5 +81,11 @@ public class AddUserViewModel extends ViewModel {
         }
 
         return true;
+    }
+
+    public void clear() {
+        if (!compositeDisposable.isDisposed()) {
+            compositeDisposable.dispose();
+        }
     }
 }

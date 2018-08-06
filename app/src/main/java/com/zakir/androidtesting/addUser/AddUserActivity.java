@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import com.zakir.androidtesting.AndroidTestingApplication;
 import com.zakir.androidtesting.R;
 import com.zakir.androidtesting.Response;
 import com.zakir.androidtesting.Status;
@@ -50,8 +51,12 @@ public class AddUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_user);
         ButterKnife.bind(this);
+        AndroidTestingApplication.get(this).
+                getAndroidTestingApplicationComponent()
+                .inject(this);
         addUserViewModel = ViewModelProviders.of(this, addUserViewModelFactory)
                 .get(AddUserViewModel.class);
+        this.addUserViewModel.response().observe(this, observer -> handleResponse(observer));
     }
 
     @VisibleForTesting
@@ -83,12 +88,16 @@ public class AddUserActivity extends AppCompatActivity {
             else if (addUserException.errorCode == AddUserException.ErrorCode.INVALID_EMAIL) {
                 emailEditText.setError(addUserException.getMessage());
             }
+            else {
+                responseObserver.getError().printStackTrace();
+            }
         }
         else if (responseObserver.getStatus() == Status.LOADING) {
             progressBar.setVisibility(View.VISIBLE);
         }
         else if (responseObserver.getStatus() == Status.SUCCESS) {
             progressBar.setVisibility(View.GONE);
+            finish();
         }
     }
 }
