@@ -14,7 +14,8 @@ import com.zakir.androidtesting.user.UserListFragmentModule;
  * Created by zakir on 26/7/18.
  */
 
-public class AndroidTestingApplication extends Application {
+public class
+AndroidTestingApplication extends Application {
 
     private AndroidTestingApplicationComponent androidTestingApplicationComponent;
     private UserListFragmentComponent userListFragmentComponent;

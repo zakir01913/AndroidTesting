@@ -21,6 +21,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
+import io.reactivex.schedulers.TestScheduler;
+
 import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -50,11 +52,12 @@ public class AdUserViewModelTest {
 
     AddUserViewModel addUserViewModel;
 
+    TestScheduler testScheduler = new TestScheduler();
+
     @Before
     public void setup() throws Exception{
         MockitoAnnotations.initMocks(this);
-        addUserViewModel = new AddUserViewModel();
-        addUserViewModel.userRepository = userRepository;
+        addUserViewModel = new AddUserViewModel(userRepository, testScheduler, testScheduler);
         addUserViewModel.response().observeForever(responseObserver);
     }
 

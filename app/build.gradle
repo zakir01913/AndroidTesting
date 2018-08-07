@@ -8,7 +8,7 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.zakir.androidtesting.MockTestRunner"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -99,4 +99,8 @@ dependencies {
     androidTestCompile deps.support.v4
     androidTestCompile deps.support.app_compat
     androidTestCompile deps.support.design
+
+    // dagger
+    androidTestImplementation deps.dagger.runtime
+    androidTestAnnotationProcessor deps.dagger.compiler
 }

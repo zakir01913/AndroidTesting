@@ -49,6 +49,7 @@ public class AddUserViewModel extends ViewModel {
                 long id = userRepository.insert(user);
                 return id;
             })
+            .doOnSubscribe( disposable -> response.postValue(Response.loading()))
             .subscribeOn(subscribeScheduler)
             .observeOn(observerScheduler)
             .subscribe(id -> {

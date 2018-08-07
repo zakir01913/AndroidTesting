@@ -126,18 +126,4 @@ public class AddUserActivityTest {
 
         onView(withId(R.id.add_user_pb)).check(matches(isDisplayed()));
     }
-
-    @Test
-    public void response_withSuccess_hideProgressBar() {
-        responseMutableLiveData.postValue(
-                Response.loading()
-        );
-
-        responseMutableLiveData.postValue(
-                Response.success(UserTestUtils.createValidUser())
-        );
-
-        onView(withId(R.id.add_user_pb)).check(matches(not(isDisplayed())));
-    }
-
 }
