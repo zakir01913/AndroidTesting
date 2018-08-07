@@ -1,8 +1,10 @@
 package com.zakir.androidtesting;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.zakir.androidtesting.user.UserDetailActivity;
 import com.zakir.androidtesting.user.UserDetailFragment;
 import com.zakir.androidtesting.user.UserListFragment;
 
@@ -38,12 +40,18 @@ public class MainActivity extends AppCompatActivity implements UserListFragment.
 
     @Override
     public void onUserSelected(long userId) {
-
+        if (userDetailFragment != null) {
+            userDetailFragment.loadUser(userId);
+        }
+        else {
+            Intent intent = new Intent(this, UserDetailActivity.class);
+            intent.putExtra(UserDetailActivity.USER_ID_KEY, userId);
+            startActivity(intent);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        userListFragment.loadUser();
     }
 }

@@ -3,6 +3,7 @@ package com.zakir.androidtesting.di.component;
 import com.zakir.androidtesting.addUser.AddUserActivity;
 import com.zakir.androidtesting.di.module.ApplicationModule;
 import com.zakir.androidtesting.di.module.ContextModule;
+import com.zakir.androidtesting.user.UserDetailFragment;
 import com.zakir.androidtesting.user.UserListFragmentComponent;
 import com.zakir.androidtesting.user.UserListFragmentModule;
 
@@ -20,4 +21,6 @@ public interface AndroidTestingApplicationComponent {
     void inject(AddUserActivity addUserActivity);
 
     UserListFragmentComponent plus(UserListFragmentModule userListFragmentModule);
+
+    void inject(UserDetailFragment userDetailFragment);
 }

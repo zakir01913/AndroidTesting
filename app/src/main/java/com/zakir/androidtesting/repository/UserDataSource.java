@@ -15,7 +15,7 @@ public interface UserDataSource {
 
     Flowable<List<User>> getUsers();
 
-    Flowable<User> getUserById(int userId);
+    Flowable<User> getUserById(long userId);
 
     long insert(User user);
 

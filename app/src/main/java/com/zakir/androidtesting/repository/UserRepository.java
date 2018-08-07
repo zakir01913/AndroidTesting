@@ -27,4 +27,8 @@ public class UserRepository {
     public Flowable<List<User>> getUsers() {
        return userDataSource.getUsers();
     }
+
+    public Flowable<User> getUserById(long userId) {
+        return userDataSource.getUserById(userId);
+    }
 }

@@ -56,7 +56,22 @@ public class UserViewModel extends ViewModel {
     }
 
     public void loadUser(long userId) {
-
+        if (userMap.containsKey(userId)) {
+            userMutableLiveData.setValue(Response.success(userMap.get(userId)));
+            return;
+        }
+        compositeDisposable.add(userRepository.getUserById(userId)
+        .subscribeOn(subscribeSchedular)
+        .observeOn(observeSchedular)
+        .doOnSubscribe(d -> userMutableLiveData.postValue(Response.loading()))
+        .subscribe(
+                user -> {
+                    userMutableLiveData.setValue(Response.success(user));
+                    userMap.put(user.getId(), user);
+                },
+                throwable -> userMutableLiveData.setValue(Response.error(throwable)),
+                () -> compositeDisposable.dispose()
+        ));
     }
 
     public MutableLiveData<Response<List<User>>> getUsersMutableLiveData() {

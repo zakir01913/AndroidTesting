@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.zakir.androidtesting.AndroidTestingApplication;
 import com.zakir.androidtesting.R;
 import com.zakir.androidtesting.Response;
 import com.zakir.androidtesting.Status;
 import com.zakir.androidtesting.UserViewModel;
+import com.zakir.androidtesting.UserViewModelFactoryType;
 import com.zakir.androidtesting.persistence.User;
 
 import javax.inject.Inject;
@@ -39,11 +41,9 @@ public class UserDetailFragment extends Fragment {
     TextView userDetailError;
 
     @Inject
-    public
-    ViewModelProvider.Factory viewModelFactory;
+    @UserViewModelFactoryType
+    public ViewModelProvider.Factory viewModelFactory;
     private UserViewModel userViewModel;
-    public static String USER_ID_KEY = "userId";
-    private long userId;
 
     @Nullable
     @Override
@@ -59,16 +59,18 @@ public class UserDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        AndroidTestingApplication.get(getActivity()).
+                getAndroidTestingApplicationComponent()
+                .inject(this);
+
         userViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).
                 get(UserViewModel.class);
         userViewModel.getUserMutableLiveData().observe(getActivity(),
                 userResponse -> handleResponse(userResponse));
 
-        if (savedInstanceState != null)
-            userId = savedInstanceState.getLong(USER_ID_KEY);
     }
 
-    public void loadUser() {
+    public void loadUser(long userId) {
         userViewModel.loadUser(userId);
     }
 

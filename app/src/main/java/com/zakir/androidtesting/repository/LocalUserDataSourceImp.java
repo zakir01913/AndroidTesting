@@ -20,7 +20,7 @@ public class LocalUserDataSourceImp implements UserDataSource {
     }
 
     @Override
-    public Flowable<User> getUserById(int userId) {
+    public Flowable<User> getUserById(long userId) {
         return userDao.getUser(userId);
     }
 

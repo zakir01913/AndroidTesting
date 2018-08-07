@@ -120,8 +120,4 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
         userViewModel.getUsersMutableLiveData().observe(this,
                 listResponse -> handleResponse(listResponse));
     }
-
-    public void loadUser() {
-        userViewModel.loadUsers();
-    }
 }
