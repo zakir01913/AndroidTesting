@@ -111,6 +111,7 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
     @Override
     public void onDetach() {
         AndroidTestingApplication.get(getActivity()).realeaseUserListFragmentComponent();
+        userViewModel.dispose();
         super.onDetach();
     }
 

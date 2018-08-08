@@ -10,6 +10,7 @@ import com.zakir.androidtesting.persistence.User;
 import com.zakir.androidtesting.repository.UserRepository;
 import com.zakir.androidtesting.utils.UserTestUtils;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,11 +62,17 @@ public class AdUserViewModelTest {
         addUserViewModel.response().observeForever(responseObserver);
     }
 
+    @After
+    public void cleanup() {
+        addUserViewModel.dispose();
+    }
+
     @Test
     public void insert_withUser_returnLoading() {
         User user = UserTestUtils.createValidUser();
 
         addUserViewModel.insert(user);
+        testScheduler.triggerActions();
 
         verify(responseObserver, times(2)).onChanged(argumentCaptor.capture());
         List<Response<User>> responses = argumentCaptor.getAllValues();
@@ -152,6 +159,7 @@ public class AdUserViewModelTest {
         when(userRepository.insert(ArgumentMatchers.any(User.class))).thenReturn(1l);
 
         addUserViewModel.insert(user);
+        testScheduler.triggerActions();
 
         verify(responseObserver, times(2)).onChanged(argumentCaptor.capture());
         Response<User> response = argumentCaptor.getValue();

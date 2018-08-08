@@ -84,7 +84,7 @@ public class AddUserViewModel extends ViewModel {
         return true;
     }
 
-    public void clear() {
+    public void dispose() {
         if (!compositeDisposable.isDisposed()) {
             compositeDisposable.dispose();
         }

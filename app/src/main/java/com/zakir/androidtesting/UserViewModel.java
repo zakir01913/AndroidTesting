@@ -25,7 +25,7 @@ public class UserViewModel extends ViewModel {
     UserRepository userRepository;
     MutableLiveData<Response<List<User>>> responseMutableLiveData = new MutableLiveData<>();
     CompositeDisposable compositeDisposable = new CompositeDisposable();
-    Scheduler subscribeSchedular, observeSchedular;
+    Scheduler subscribeScheduler, observeScheduler;
     private MutableLiveData<Response<User>> userMutableLiveData = new MutableLiveData<>();
     private Map<Long, User> userMap = new HashedMap();
 
@@ -34,14 +34,14 @@ public class UserViewModel extends ViewModel {
                          @SubscribeScheduler Scheduler subscribeScheduler,
                          @ObserverScheduler Scheduler observeScheduler) {
         this.userRepository = userRepository;
-        this.subscribeSchedular = subscribeScheduler;
-        this.observeSchedular = observeScheduler;
+        this.subscribeScheduler = subscribeScheduler;
+        this.observeScheduler = observeScheduler;
     }
 
     public void loadUsers() {
         compositeDisposable.add(userRepository.getUsers()
-                .subscribeOn(subscribeSchedular)
-                .observeOn(observeSchedular)
+                .subscribeOn(subscribeScheduler)
+                .observeOn(observeScheduler)
                 .doOnSubscribe(d -> {
                     responseMutableLiveData.postValue(Response.loading());
                 })
@@ -61,8 +61,8 @@ public class UserViewModel extends ViewModel {
             return;
         }
         compositeDisposable.add(userRepository.getUserById(userId)
-        .subscribeOn(subscribeSchedular)
-        .observeOn(observeSchedular)
+        .subscribeOn(subscribeScheduler)
+        .observeOn(observeScheduler)
         .doOnSubscribe(d -> userMutableLiveData.postValue(Response.loading()))
         .subscribe(
                 user -> {
