@@ -76,6 +76,11 @@ public class AddUserActivity extends AppCompatActivity {
         addUserViewModel.insert(user);
     }
 
+    @OnClick(R.id.cancel_btn)
+    public void cancel(){
+        finish();
+    }
+
     private void handleResponse(Response<User> responseObserver) {
         if (responseObserver.getStatus() == Status.ERROR) {
             AddUserException addUserException = (AddUserException) responseObserver.getError();

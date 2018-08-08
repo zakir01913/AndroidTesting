@@ -22,6 +22,8 @@ import com.zakir.androidtesting.Status;
 import com.zakir.androidtesting.UserViewModel;
 import com.zakir.androidtesting.UserViewModelFactoryType;
 import com.zakir.androidtesting.addUser.AddUserActivity;
+import com.zakir.androidtesting.di.ObserverScheduler;
+import com.zakir.androidtesting.di.SubscribeScheduler;
 import com.zakir.androidtesting.persistence.User;
 
 import java.util.List;
@@ -31,9 +33,11 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
 
 
-public class UserListFragment extends Fragment implements UserListAdapter.ItemClickListener {
+public class UserListFragment extends Fragment implements UserListAdapter.ItemClickListener, UserListAdapter.ItemDeleteClickListener {
 
     @BindView(R.id.user_list_loader_fl)
     FrameLayout userListLoaderFL;
@@ -44,11 +48,19 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
     @UserViewModelFactoryType
     public ViewModelProvider.Factory viewModelFactory;
 
+    @Inject
+    @SubscribeScheduler
+    Scheduler subscribeScheduler;
+
+    @Inject
+    @ObserverScheduler
+    Scheduler observeScheduler;
+
     private UserListAdapter userListAdapter = new UserListAdapter();
 
     private UserViewModel userViewModel;
 
-    private UserViewModel viewModel;
+    private Disposable deleteDisposable;
 
     @Nullable
     @Override
@@ -73,6 +85,7 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
         userRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         userRecyclerView.setAdapter(userListAdapter);
         userListAdapter.setItemClickListener(this);
+        userListAdapter.setItemDeleteClickListener(this);
 
         userViewModel.getUsersMutableLiveData().observe(this,
                 listResponse -> handleResponse(listResponse));
@@ -102,6 +115,24 @@ public class UserListFragment extends Fragment implements UserListAdapter.ItemCl
     @Override
     public void onItemClick(long userId) {
         ((Contract)getActivity()).onUserSelected(userId);
+    }
+
+    @Override
+    public void onItemDelete(User user) {
+        userListLoaderFL.setVisibility(View.VISIBLE);
+        deleteDisposable = userViewModel.deleteUser(user)
+        .subscribeOn(subscribeScheduler)
+        .observeOn(observeScheduler)
+        .subscribe(
+                num -> {
+                    userListLoaderFL.setVisibility(View.GONE);
+                    deleteDisposable.dispose();
+                },
+                throwable -> {
+                    userListLoaderFL.setVisibility(View.GONE);
+                    deleteDisposable.dispose();
+                }
+        );
     }
 
     public interface Contract {

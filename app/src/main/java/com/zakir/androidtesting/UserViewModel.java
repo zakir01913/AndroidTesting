@@ -18,16 +18,19 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class UserViewModel extends ViewModel {
 
     UserRepository userRepository;
-    MutableLiveData<Response<List<User>>> responseMutableLiveData = new MutableLiveData<>();
+    MutableLiveData<Response<List<User>>> userListResponseMutableLiveData = new MutableLiveData<>();
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     Scheduler subscribeScheduler, observeScheduler;
     private MutableLiveData<Response<User>> userMutableLiveData = new MutableLiveData<>();
     private Map<Long, User> userMap = new HashedMap();
+    private Disposable deleteDisposable;
 
     @Inject
     public UserViewModel(@LocalUserRepository UserRepository userRepository,
@@ -43,15 +46,15 @@ public class UserViewModel extends ViewModel {
                 .subscribeOn(subscribeScheduler)
                 .observeOn(observeScheduler)
                 .doOnSubscribe(d -> {
-                    responseMutableLiveData.postValue(Response.loading());
+                    userListResponseMutableLiveData.postValue(Response.loading());
                 })
                 .subscribe(
                         users -> {
-                            responseMutableLiveData.setValue(Response.success(users));
+                            userListResponseMutableLiveData.setValue(Response.success(users));
                             Observable.fromIterable(users)
                                     .map(user -> userMap.put(user.getId(), user));
                         },
-                        exp -> responseMutableLiveData.setValue(Response.error(exp))
+                        exp -> userListResponseMutableLiveData.setValue(Response.error(exp))
                 ));
     }
 
@@ -75,7 +78,7 @@ public class UserViewModel extends ViewModel {
     }
 
     public MutableLiveData<Response<List<User>>> getUsersMutableLiveData() {
-        return responseMutableLiveData;
+        return userListResponseMutableLiveData;
     }
 
     public void dispose() {
@@ -85,5 +88,15 @@ public class UserViewModel extends ViewModel {
 
     public MutableLiveData<Response<User>> getUserMutableLiveData() {
         return userMutableLiveData;
+    }
+
+    public Single<Integer> deleteUser(User user) {
+       return Single.fromCallable(()-> {
+           int num = userRepository.deleteUser(user);
+           if (num > 0) {
+               userMap.remove(user.getId());
+           }
+           return num;
+       });
     }
 }

@@ -31,4 +31,8 @@ public class UserRepository {
     public Flowable<User> getUserById(long userId) {
         return userDataSource.getUserById(userId);
     }
+
+    public int deleteUser(User user) {
+       return userDataSource.delete(user);
+    }
 }

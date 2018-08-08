@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -27,11 +28,16 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
+
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -91,16 +97,47 @@ public class UserListFragmentTest {
         lunchActivity();
         List<User> userList = UserTestUtils.getUsers(2);
         responseMutableLiveData.postValue(Response.success(userList));
-        String name = userList.get(0).getFirstName() + " " + userList.get(0).getLastName();
-        String name1 = userList.get(1).getFirstName() + " " + userList.get(1).getLastName();
+        String name = userList.get(0).getFullName();
+        String name1 = userList.get(1).getFullName();
 
         onView(withText(name)).check(matches(isDisplayed()));
         onView(withText(name1)).check(matches(isDisplayed()));
         onView(withId(R.id.user_list_pb)).check(matches(not(isDisplayed())));
     }
 
+    @Test
+    public void pressDeleteBtn_removeUserFromList() {
+        lunchActivity();
+        List<User> userList = UserTestUtils.getUsers(2);
+        User user = userList.get(0);
+        when(userViewModel.deleteUser(user)).thenAnswer(invocation -> {
+            userList.remove(user);
+            responseMutableLiveData.postValue(Response.success(copy(userList)));
+            return Single.just(1);
+        });
+
+        responseMutableLiveData.postValue(Response.success(copy(userList)));
+        onView(withText(user.getFullName())).check(matches(isDisplayed()));
+
+        onView(withId(R.id.user_list_rv)).perform(RecyclerViewActions.actionOnItemAtPosition(
+                0,
+                new UserListDeleteViewAction(R.id.delete_iv)));
+
+        verify(userViewModel).deleteUser(user);
+        onView(withText(user.getFullName())).check(doesNotExist());
+    }
+
     private void lunchActivity() {
         testActivityActivityTestRule.launchActivity(new Intent());
         testActivityActivityTestRule.getActivity().setFragment(userListFragment);
+    }
+
+    private List<User> copy(List<User> users) {
+        List<User> userList = new ArrayList<>();
+        for (User user : users) {
+            userList.add(user);
+        }
+
+        return userList;
     }
 }
